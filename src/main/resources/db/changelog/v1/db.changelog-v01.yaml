@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: v1.0__create_table_allowed_user
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__create_table_allowed_user.sql
+  - changeSet:
+      id: v1.0__create_tablet_log
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__create_tablet_log.sql
+  - changeSet:
+      id: v1.0__create_table_user_retries
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__create_table_user_retries.sql
