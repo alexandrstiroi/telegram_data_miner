@@ -6,11 +6,9 @@ bot:
   # Database
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.88.90:5432/data_miner_bot
+    url: jdbc:postgresql://${DB_PATH}/data_miner_bot
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
-server:
-  port: 8081
