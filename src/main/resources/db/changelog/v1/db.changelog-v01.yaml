@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: v1.0__create_table_allowed_user
+      id: v1.0__create_table_t_user
       author: Shtiroy Aleksandr
       changes:
         sqlFile:
-          path: db/changelog/v1/v1.0__create_table_allowed_user.sql
+          path: db/changelog/v1/v1.0__create_table_t_user.sql
   - changeSet:
       id: v1.0__create_tablet_log
       author: Shtiroy Aleksandr
@@ -12,8 +12,26 @@ databaseChangeLog:
         sqlFile:
           path: db/changelog/v1/v1.0__create_tablet_log.sql
   - changeSet:
-      id: v1.0__create_table_user_retries
+      id: v1.0__create_table_t_category
       author: Shtiroy Aleksandr
       changes:
         sqlFile:
-          path: db/changelog/v1/v1.0__create_table_user_retries.sql
+          path: db/changelog/v1/v1.0__create_table_t_category.sql
+  - changeSet:
+      id: v1.0__data_import_t_category.sql
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__data_import_t_category.sql
+  - changeSet:
+      id: v1.0__create_table_tender_preference
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__create_table_tender_preference.sql
+  - changeSet:
+      id: v1.0__create_table_t_config
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v1/v1.0__create_table_t_config.sql
