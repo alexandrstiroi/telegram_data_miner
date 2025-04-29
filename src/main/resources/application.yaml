@@ -21,4 +21,4 @@ service:
 #
 app:
   crone:
-    notification: "0 0/5 7-18 * * 1-5"
+    notification: ${CRONE_NOTIF}
