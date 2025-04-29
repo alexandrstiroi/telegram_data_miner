@@ -1,6 +1,8 @@
 package org.shtiroy_ap.telegram.service;
 
+import org.shtiroy_ap.telegram.entity.TenderPreference;
 import org.shtiroy_ap.telegram.entity.User;
+import org.shtiroy_ap.telegram.repository.TenderPreferenceRepository;
 import org.shtiroy_ap.telegram.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,11 @@ public class AuthService {
     private String pinCode;
 
     private final UserRepository userRepository;
+    private final TenderPreferenceRepository tenderPreferenceRepository;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, TenderPreferenceRepository tenderPreferenceRepository) {
         this.userRepository = userRepository;
+        this.tenderPreferenceRepository = tenderPreferenceRepository;
     }
 
     public boolean isAuthorized(Long chatId) {
@@ -36,7 +40,16 @@ public class AuthService {
         if (existing.isEmpty()) {
             if (text.equals(pinCode)) {
                 User user = new User(chatId, update.getMessage().getFrom().getUserName(), true);
-                userRepository.save(user);
+                user = userRepository.save(user);
+                //todo убрать после возможности настройки прдпочтений
+                TenderPreference tenderPreference = new TenderPreference();
+                tenderPreference.setCategoryId("30100000-0");
+                tenderPreference.setUser(user);
+                tenderPreferenceRepository.save(tenderPreference);
+                tenderPreference.setCategoryId("30200000-0");
+                tenderPreference.setUser(user);
+                tenderPreferenceRepository.save(tenderPreference);
+                //todo убрать
                 sendMessage(sender, chatId, "✅ Авторизация успешна!");
             } else {
                 sendMessage(sender, chatId, "🔐 Введите PIN-код для доступа:");
