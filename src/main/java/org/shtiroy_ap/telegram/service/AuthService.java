@@ -46,9 +46,10 @@ public class AuthService {
                 tenderPreference.setCategoryId("30100000-0");
                 tenderPreference.setUser(user);
                 tenderPreferenceRepository.save(tenderPreference);
-                tenderPreference.setCategoryId("30200000-0");
-                tenderPreference.setUser(user);
-                tenderPreferenceRepository.save(tenderPreference);
+                TenderPreference tenderPreference1 = new TenderPreference();
+                tenderPreference1.setCategoryId("30200000-0");
+                tenderPreference1.setUser(user);
+                tenderPreferenceRepository.save(tenderPreference1);
                 //todo убрать
                 sendMessage(sender, chatId, "✅ Авторизация успешна!");
             } else {
