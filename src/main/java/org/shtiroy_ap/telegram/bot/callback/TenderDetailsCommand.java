@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
+import java.util.List;
+
 @Service
 @CallbackMapping("DETAILS")
 public class TenderDetailsCommand implements CallbackCommand {
@@ -26,6 +28,14 @@ public class TenderDetailsCommand implements CallbackCommand {
     public void execute(CallbackQuery callbackQuery, AbsSender sender, String data) {
         TenderDetailDto dto = tenderService.fetchTenderDetail(data);
         String htmlMessage = tenderMessageBuilderService.buildTenderMessage(dto);
-        messageService.sendTextMessage(sender, callbackQuery.getMessage().getChatId(), htmlMessage);
+        if (htmlMessage.length() > 4096) {
+            messageService.sendTextMessage(sender, callbackQuery.getMessage().getChatId(), htmlMessage);
+        } else {
+            List<String> messageParts = tenderMessageBuilderService.splitMessage(htmlMessage);
+            for (String part : messageParts) {
+                messageService.sendTextMessage(sender, callbackQuery.getMessage().getChatId(), part);
+            }
+
+        }
     }
 }
