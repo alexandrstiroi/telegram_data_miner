@@ -1,5 +1,7 @@
 package org.shtiroy_ap.telegram.bot.callback;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.shtiroy_ap.telegram.model.TenderDetailDto;
 import org.shtiroy_ap.telegram.service.MessageService;
 import org.shtiroy_ap.telegram.service.TenderMessageBuilderService;
@@ -16,6 +18,7 @@ public class TenderDetailsCommand implements CallbackCommand {
     private final MessageService messageService;
     private final TenderService tenderService;
     private TenderMessageBuilderService tenderMessageBuilderService;
+    private final Logger log = LogManager.getLogger(TenderDetailsCommand.class.getName());
 
     public TenderDetailsCommand(MessageService messageService, TenderService tenderService,
                                 TenderMessageBuilderService tenderMessageBuilderService) {
@@ -28,7 +31,7 @@ public class TenderDetailsCommand implements CallbackCommand {
     public void execute(CallbackQuery callbackQuery, AbsSender sender, String data) {
         TenderDetailDto dto = tenderService.fetchTenderDetail(data);
         String htmlMessage = tenderMessageBuilderService.buildTenderMessage(dto);
-        if (htmlMessage.length() > 4096) {
+        if (htmlMessage.length() < 4096) {
             messageService.sendTextMessage(sender, callbackQuery.getMessage().getChatId(), htmlMessage);
         } else {
             List<String> messageParts = tenderMessageBuilderService.splitMessage(htmlMessage);
