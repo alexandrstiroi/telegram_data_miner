@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: v2.0__alter_table_t_category
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v2/v2.0__alter_table_t_category.sql
+  - changeSet:
+      id: v2.0__data_import_t_category
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v2/v2.0__data_import_t_category.sql

@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface TenderPreferenceRepository extends JpaRepository<TenderPreference, Integer> {
     List<TenderPreference> findByUser(User user);
+
+    boolean existsByUserAndCategoryId(User user, String categoryId);
+
+    void deleteByUserAndCategoryId(User user, String categoryId);
 }

@@ -25,6 +25,11 @@ public class TenderPreference {
     public TenderPreference() {
     }
 
+    public TenderPreference(String categoryId, User user) {
+        this.categoryId = categoryId;
+        this.user = user;
+    }
+
     public TenderPreference(Integer id, String keyword, String categoryId, User user) {
         this.id = id;
         this.keyword = keyword;
