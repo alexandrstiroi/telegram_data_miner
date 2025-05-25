@@ -2,18 +2,55 @@ package org.shtiroy_ap.telegram.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * Объект тендер.
+ */
 public class TenderDetailDto {
+    /**
+     * Уникальный идентификатор.
+     */
     private Integer id;
+    /**
+     * Наименование тендера.
+     */
     private String name;
+    /**
+     * Уникальный индетификатор тендера из mtender.md
+     */
     private String uniqueId;
+    /**
+     * Ссылки на тендер.
+     */
     private String urls;
+    /**
+     * Код категории тендера.
+     */
     private String category;
+    /**
+     * Наименование категории.
+     */
     private String categoryName;
+    /**
+     * Сумма по тендеру.
+     */
     private BigDecimal amount;
+    /**
+     * Валюта.
+     */
     private String currency;
+    /**
+     * Дата аукциона.
+     */
     private String date;
+    /**
+     * Уникальный идентификатор заказчика.
+     */
     private String costumerId;
+    /**
+     * Список лотов.
+     */
     private List<Lot> lots;
 
     public TenderDetailDto() {
@@ -119,5 +156,30 @@ public class TenderDetailDto {
 
     public void setLots(List<Lot> lots) {
         this.lots = lots;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TenderDetailDto detailDto = (TenderDetailDto) o;
+        boolean result = Objects.equals(id, detailDto.id) &&
+                amount.compareTo(detailDto.getAmount()) == 0 &&
+                Objects.equals(date, detailDto.date) &&
+                Objects.equals(costumerId, detailDto.costumerId);
+        if (!result) {
+            return false;
+        }
+        for (Lot lot : lots){
+            for (Lot dLot : detailDto.lots){
+                if (dLot.getUuid().equals(lot.getUuid())){
+                    result = result &&
+                            Objects.equals(dLot.getStatus(), lot.getStatus());
+                    if (lot.getLotSuppliers() != null){
+                        result = result && Objects.equals(dLot.getLotSuppliers().size(), lot.getLotSuppliers().size());
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

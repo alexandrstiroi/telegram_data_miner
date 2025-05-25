@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: v3.0__create_table_user_favorites
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v3/v3.0__create_table_user_favorites.sql

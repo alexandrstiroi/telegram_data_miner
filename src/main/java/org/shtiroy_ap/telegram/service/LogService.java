@@ -20,29 +20,25 @@ public class LogService {
     }
 
     public boolean insertLog(Update update){
-        boolean result = true;
-        try {
-            Log log = new Log();
-            log.setChatId(update.getMessage().getChatId());
-            log.setMessage(update.getMessage().getText());
-            log.setCreateStamp(LocalDateTime.now());
-            repository.save(log);
-            return result;
-        } catch (Exception ex){
-            log.error("error insert log {}", ex.getMessage());
-        }
-        return false;
+        Log log = new Log();
+        log.setChatId(update.getMessage().getChatId());
+        log.setMessage(update.getMessage().getText());
+        log.setCreateStamp(LocalDateTime.now());
+        return saveLog(log);
     }
 
     public boolean insertLog(CallbackQuery callbackQuery){
-        boolean result = true;
+        Log log = new Log();
+        log.setChatId(callbackQuery.getMessage().getChatId());
+        log.setMessage(callbackQuery.getData());
+        log.setCreateStamp(LocalDateTime.now());
+        return saveLog(log);
+    }
+
+    private boolean saveLog(Log logs){
         try {
-            Log log = new Log();
-            log.setChatId(callbackQuery.getMessage().getChatId());
-            log.setMessage(callbackQuery.getData());
-            log.setCreateStamp(LocalDateTime.now());
-            repository.save(log);
-            return result;
+            repository.save(logs);
+            return true;
         } catch (Exception ex){
             log.error("error insert log {}", ex.getMessage());
         }

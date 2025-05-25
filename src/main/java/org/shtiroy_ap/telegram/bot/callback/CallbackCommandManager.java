@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Сервис для отбрадотки callback запросов от пользователя.
+ * В зависимости от команды перенаправляет в нужный сервис.
+ */
 @Service
 public class CallbackCommandManager {
     private final Map<String, CallbackCommand> commandMap = new HashMap<>();

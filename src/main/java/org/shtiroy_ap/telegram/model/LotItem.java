@@ -1,8 +1,20 @@
 package org.shtiroy_ap.telegram.model;
 
+/**
+ * Объект по составу лота.
+ */
 public class LotItem {
+    /**
+     * Код компонета.
+     */
     private String codeCPV;
+    /**
+     * Описание кода.
+     */
     private String description;
+    /**
+     * Количество.
+     */
     private Integer count;
 
     public LotItem() {

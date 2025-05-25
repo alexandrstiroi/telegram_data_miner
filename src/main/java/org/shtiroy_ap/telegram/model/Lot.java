@@ -2,13 +2,38 @@ package org.shtiroy_ap.telegram.model;
 
 import java.util.List;
 
+/**
+ * Объект для передачи информации о лоте.
+ */
 public class Lot {
+    /**
+     * uuid идентификатор из mtender.md
+     */
     private String uuid;
+
+    /**
+     * Описание лота.
+     */
     private String description;
+    /**
+     * Наименование лота.
+     */
     private String title;
+    /**
+     * Стоимость лота.
+     */
     private Value value;
+    /**
+     * Статус лота.
+     */
     private String status;
+    /**
+     * Список товаров в лоте.
+     */
     private List<LotItem> lotItems;
+    /**
+     * Участники по лоту.
+     */
     private List<LotSupplier> lotSuppliers;
 
     public Lot() {

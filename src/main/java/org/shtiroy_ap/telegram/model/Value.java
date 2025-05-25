@@ -2,8 +2,17 @@ package org.shtiroy_ap.telegram.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Объект сумма тендера или лота.
+ */
 public class Value {
+    /**
+     * Сумма.
+     */
     private BigDecimal amount;
+    /**
+     * Валюта.
+     */
     private String currency;
 
     public Value() {

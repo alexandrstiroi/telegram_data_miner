@@ -14,6 +14,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.shtiroy_ap.telegram.util.StringConstants.BOT_ERROR;
+/**
+ * Диспетчер команд.
+ */
 @Service
 public class CommandDispatcher {
     private final Map<String, BotCommand> commandMap;
@@ -27,6 +31,11 @@ public class CommandDispatcher {
                 .collect(Collectors.toMap(BotCommand::getName, Function.identity()));
     }
 
+    /**
+     * Парсин команду и вызывает нужного обработчика.
+     * @param update - команда
+     * @param sender - интерфейс бота
+     */
     public void dispatch(Update update, AbsSender sender) {
         Long chatId = update.getMessage().getChatId();
         String message = update.getMessage().getText();
@@ -46,8 +55,7 @@ public class CommandDispatcher {
             try {
                 sender.execute(error);
             } catch (TelegramApiException e) {
-                log.error("Ошибка {}",e.getMessage());
-                e.printStackTrace();
+                log.error(BOT_ERROR,e.getMessage());
             }
         }
     }

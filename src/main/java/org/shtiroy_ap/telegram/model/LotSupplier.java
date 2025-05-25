@@ -1,10 +1,28 @@
 package org.shtiroy_ap.telegram.model;
 
+/**
+ * Объект участник тендера.
+ */
 public class LotSupplier {
+    /**
+     * Уникальный идентификатор.
+     */
     private String id;
+    /**
+     * Наименование фирмы участника.
+     */
     private String name;
+    /**
+     * Статуст(выиграл, отклонен , непрошел) участника.
+     */
     private String status;
+    /**
+     * Описание.
+     */
     private String description;
+    /**
+     * Предложенная стоимость.
+     */
     private Value value;
 
     public LotSupplier() {
@@ -56,5 +74,16 @@ public class LotSupplier {
 
     public void setValue(Value value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "LotSupplier{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                ", value=" + value +
+                '}';
     }
 }

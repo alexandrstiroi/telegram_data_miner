@@ -24,6 +24,8 @@ public class TenderService {
     private String apiUrlNew;
     @Value("${service.getDetail}")
     private String apiUrlDetail;
+    @Value("${service.getUpdate}")
+    private String apiUrlUpdate;
 
     public TenderService(WebClient webClient, ConfigService configService){
         this.webClient = webClient;
@@ -55,6 +57,22 @@ public class TenderService {
         try {
             TenderDetailDto detailDto = webClient.post()
                     .uri(apiUrlDetail)
+                    .bodyValue(tenderId)
+                    .retrieve()
+                    .bodyToMono(TenderDetailDto.class)
+                    .block();
+            return detailDto;
+        } catch (Exception e){
+            log.info("Ошибка скачивания тендера {}", tenderId);
+            return null;
+        }
+    }
+
+    public TenderDetailDto verifyTenderDetail(String tenderId){
+        log.info("Скачиваем подробности {}", tenderId);
+        try {
+            TenderDetailDto detailDto = webClient.post()
+                    .uri(apiUrlUpdate)
                     .bodyValue(tenderId)
                     .retrieve()
                     .bodyToMono(TenderDetailDto.class)
