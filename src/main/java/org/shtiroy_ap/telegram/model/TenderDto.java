@@ -1,14 +1,44 @@
 package org.shtiroy_ap.telegram.model;
 
+/**
+ * Объект тендер.
+ */
 public class TenderDto {
+    /**
+     * Уникальный идентификатор.
+     */
     private Integer id;
+    /**
+     * Наименование тендера.
+     */
     private String name;
+    /**
+     * Ссылка на тендер.
+     */
     private String url;
+    /**
+     * наименование заказчика.
+     */
     private String customerName;
+    /**
+     * Уникальный идентификатор заказчика.
+     */
     private String customerId;
+    /**
+     * Сумма по тендеру.
+     */
     private String value;
+    /**
+     * Дата по тендеру.
+     */
     private String date;
+    /**
+     * Уникальный идентификатор тендера.
+     */
     private String uniqueId;
+    /**
+     * Категория тендера.
+     */
     private String category;
 
     public TenderDto() {

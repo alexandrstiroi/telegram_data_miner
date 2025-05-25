@@ -7,6 +7,7 @@ import org.shtiroy_ap.telegram.entity.User;
 import org.shtiroy_ap.telegram.model.TenderDto;
 import org.shtiroy_ap.telegram.repository.TenderPreferenceRepository;
 import org.shtiroy_ap.telegram.repository.UserRepository;
+import org.shtiroy_ap.telegram.service.FavoriteTenderService;
 import org.shtiroy_ap.telegram.service.MessageService;
 import org.shtiroy_ap.telegram.service.TenderService;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +16,9 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.util.List;
 
+/**
+ * Сервис отправки уведомлений по тендерам из избранных кодов.
+ */
 @Component
 public class NotificationScheduler {
     private final TenderService tenderService;
@@ -22,19 +26,24 @@ public class NotificationScheduler {
     private final TenderPreferenceRepository tenderPreferenceRepository;
     private final MessageService messageService;
     private final AbsSender absSender;
+    private final FavoriteTenderService favoriteTenderService;
     private final Logger log = LogManager.getLogger(NotificationScheduler.class.getName());
 
     public NotificationScheduler(TenderService tenderService, UserRepository userRepository, TenderPreferenceRepository tenderPreferenceRepository,
-                                 MessageService messageService, AbsSender absSender){
+                                 MessageService messageService, AbsSender absSender, FavoriteTenderService favoriteTenderService){
         this.tenderService = tenderService;
         this.userRepository = userRepository;
         this.tenderPreferenceRepository = tenderPreferenceRepository;
         this.messageService = messageService;
         this.absSender = absSender;
+        this.favoriteTenderService = favoriteTenderService;
     }
 
+    /**
+     * Запуск по расписанию уведомление по новым тендерам.
+     */
     @Scheduled(cron = "${app.crone.notification}")
-    public  void sendTenderNotifications() {
+    public void sendTenderNotifications() {
         log.info("Начинаем запрос! Ищем новые тендеры!");
         List<TenderDto> tenders = tenderService.fetchTenders();
         log.info("Количество новых тендеров {}", tenders.size());
@@ -60,5 +69,13 @@ public class NotificationScheduler {
                 }
             }
         }
+    }
+
+    /**
+     * Уведомления по избранным тендерам. Запуск по расписанию.
+     */
+    @Scheduled(cron = "${app.crone.verify}")
+    public void verifyTenderFavorites() {
+        favoriteTenderService.checkForUpdatesAndNotify(absSender);
     }
 }

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
+/**
+ * Сервис для анализа заказчика по тендеру.
+ */
 @Service
 @CallbackMapping("ANALYZE")
 public class AnalyzeCustomerCommand implements CallbackCommand {
