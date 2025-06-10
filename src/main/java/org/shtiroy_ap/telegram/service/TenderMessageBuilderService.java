@@ -1,12 +1,12 @@
 package org.shtiroy_ap.telegram.service;
 
-import org.shtiroy_ap.telegram.model.Lot;
-import org.shtiroy_ap.telegram.model.LotItem;
-import org.shtiroy_ap.telegram.model.LotSupplier;
-import org.shtiroy_ap.telegram.model.TenderDetailDto;
+import org.shtiroy_ap.telegram.model.*;
+import org.shtiroy_ap.telegram.util.DateUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class TenderMessageBuilderService {
         message.append("<b>🔗 Ссылка:</b> ").append("<a href=\"").append(tender.getUrls()).append("\">Открыть тендер</a>\n");
         message.append("<b>🧩 Категория:</b>\n").append(escape(tender.getCategory())).append(" - ").append(escape(tender.getCategoryName())).append("\n");
         message.append("<b>💵 Сумма:</b> ").append(MONEY_FORMAT.format(tender.getAmount())).append(" ").append(escape(tender.getCurrency())).append("\n");
-        message.append("<b>🗓 Даты:</b>\n").append(escape(tender.getDate())).append("\n\n");
+        message.append("<b>🗓 Даты:</b>\n").append(getDataInfo(tender.getPeriod(), tender.getAuctionPeriod())).append("\n\n");
 
         if (tender.getLots() != null && !tender.getLots().isEmpty()) {
             message.append("<b>📦 Лоты:</b>\n");
@@ -99,5 +99,23 @@ public class TenderMessageBuilderService {
             i = end - 1; // -1, потому что цикл ещё инкрементирует i
         }
         return parts;
+    }
+
+    private String getDataInfo(Period period, LocalDateTime auction){
+        StringBuilder sb = new StringBuilder();
+        if (period != null && period.getEnquiryPeriod() != null){
+            sb.append("Период разъяснений: c ").append(DateUtil.dateTimeToStr(period.getEnquiryPeriod().getStartDate()))
+                    .append(" по ").append(DateUtil.dateTimeToStr(period.getEnquiryPeriod().getEndDate()))
+                    .append("\n");
+        }
+        if (period != null && period.getTenderPeriod() != null){
+            sb.append("Подача предложений: с ").append(DateUtil.dateTimeToStr(period.getTenderPeriod().getStartDate()))
+                    .append(" по ").append(DateUtil.dateTimeToStr(period.getTenderPeriod().getEndDate()))
+                    .append("\n");
+        }
+        if (auction != null){
+            sb.append("Аукцион: ").append(DateUtil.dateTimeToStr(auction)).append("\n");
+        }
+        return sb.toString();
     }
 }

@@ -1,14 +1,14 @@
 package org.shtiroy_ap.telegram.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.shtiroy_ap.telegram.entity.UserFavorite;
 import org.shtiroy_ap.telegram.model.TenderDetailDto;
 import org.shtiroy_ap.telegram.repository.UserFavoriteRepository;
-import org.shtiroy_ap.telegram.util.TenderDiffUtil;
+import org.shtiroy_ap.telegram.util.TenderDetailComparator;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -60,7 +60,7 @@ public class FavoriteTenderService {
             } catch (JsonProcessingException exception){
                 continue; // неможем распарсить json
             }
-            if (current != null && !current.equals(previous)){
+            if (current != null){
                 //Есть изменения
                 try{
                     String currentJson = objectMapper.writeValueAsString(current);
@@ -69,17 +69,22 @@ public class FavoriteTenderService {
                     exception.getMessage();
                 }
                 favoriteRepository.save(fav);
-
-                String diffSummary = TenderDiffUtil.generateDiffSummry(previous, current);
-
-                SendMessage message = new SendMessage();
-                message.setChatId(fav.getChatId());
-                message.setText("📢 Обновление в тендере " + current.getName() + ":\n\n" + diffSummary);
-
-                try {
-                    absSender.execute(message);
-                } catch (TelegramApiException exception){
-                    exception.printStackTrace();
+                List<String> diff = TenderDetailComparator.compareTenderDetails(previous, current);
+                if (!diff.isEmpty()) {
+                    String diffSummary = String.join("\n", diff);
+                    ClassPathResource imgResource = new ClassPathResource("images/tender_alert.png");
+                    SendMessage message = new SendMessage();
+                    //SendPhoto message = new SendPhoto();
+                    message.setChatId(fav.getChatId());
+                    message.setText("📢 <b>Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
+                    //message.setCaption("<b>📢 Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
+                    message.setParseMode("HTML");
+                    try {
+                        //message.setPhoto(new InputFile(imgResource.getInputStream(), "tender_alert.png"));
+                        absSender.execute(message);
+                    } catch (TelegramApiException exception) {
+                        exception.printStackTrace();
+                    }
                 }
             }
         }

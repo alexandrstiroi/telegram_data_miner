@@ -24,3 +24,7 @@ app:
   crone:
     notification: ${CRONE_NOTIF}
     verify: ${CRONE_VERIFY}
+server:
+  port: 8082
+
+

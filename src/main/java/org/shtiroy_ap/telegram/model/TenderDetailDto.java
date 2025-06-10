@@ -1,6 +1,7 @@
 package org.shtiroy_ap.telegram.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,11 +53,16 @@ public class TenderDetailDto {
      * Список лотов.
      */
     private List<Lot> lots;
+    private String status;
+    private String statusDetails;
+    private Period period;
+    private LocalDateTime auctionPeriod;
+    private List<Document> documents;
 
     public TenderDetailDto() {
     }
 
-    public TenderDetailDto(Integer id, String name, String uniqueId, String urls, String category, String categoryName, BigDecimal amount, String currency, String date, String costumerId, List<Lot> lots) {
+    public TenderDetailDto(Integer id, String name, String uniqueId, String urls, String category, String categoryName, BigDecimal amount, String currency, String date, String costumerId, List<Lot> lots, String status, String statusDetails, Period period, LocalDateTime auctionPeriod, List<Document> documents) {
         this.id = id;
         this.name = name;
         this.uniqueId = uniqueId;
@@ -68,6 +74,11 @@ public class TenderDetailDto {
         this.date = date;
         this.costumerId = costumerId;
         this.lots = lots;
+        this.status = status;
+        this.statusDetails = statusDetails;
+        this.period = period;
+        this.auctionPeriod = auctionPeriod;
+        this.documents = documents;
     }
 
     public Integer getId() {
@@ -158,6 +169,46 @@ public class TenderDetailDto {
         this.lots = lots;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusDetails() {
+        return statusDetails;
+    }
+
+    public void setStatusDetails(String statusDetails) {
+        this.statusDetails = statusDetails;
+    }
+
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
+    public LocalDateTime getAuctionPeriod() {
+        return auctionPeriod;
+    }
+
+    public void setAuctionPeriod(LocalDateTime auctionPeriod) {
+        this.auctionPeriod = auctionPeriod;
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -165,7 +216,9 @@ public class TenderDetailDto {
         boolean result = Objects.equals(id, detailDto.id) &&
                 amount.compareTo(detailDto.getAmount()) == 0 &&
                 Objects.equals(date, detailDto.date) &&
-                Objects.equals(costumerId, detailDto.costumerId);
+                Objects.equals(costumerId, detailDto.costumerId) &&
+                Objects.equals(status, detailDto.status) &&
+                Objects.equals(statusDetails, detailDto.statusDetails);
         if (!result) {
             return false;
         }
