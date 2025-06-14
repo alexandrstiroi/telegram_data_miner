@@ -65,7 +65,7 @@ public class NotificationScheduler {
                             .append("<b>IDNO:</b>\n").append("<i>").append(tenderDto.getCustomerId()).append("</i>").append("\n\n")
                             .append("<b>").append(tenderDto.getDate()).append("</b>").append("\n")
                             .append("<b>Ссылка на тендер:</b>\n").append("<a href=\"").append(tenderDto.getUrl()).append("\">Тендер</a>");
-                    messageService.sendTextMessage(absSender, user.getChatId(), message.toString(), tenderDto.getId(), tenderDto.getCustomerId());
+                    messageService.sendPhotoMessage(absSender, user.getChatId(), message.toString(), tenderDto.getId(), tenderDto.getCustomerId());
                 }
             }
         }

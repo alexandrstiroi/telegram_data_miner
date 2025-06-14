@@ -3,7 +3,6 @@ package org.shtiroy_ap.telegram.service;
 import org.shtiroy_ap.telegram.model.*;
 import org.shtiroy_ap.telegram.util.DateUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.util.unit.DataUnit;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -15,6 +14,7 @@ public class TenderMessageBuilderService {
 
     private static final DecimalFormat MONEY_FORMAT = new DecimalFormat("#,###.##");
     private static final int TELEGRAM_LIMIT = 4096;
+    private static final int PHOTO_CAPTION_LIMIT = 1024;
 
     public String buildTenderMessage(TenderDetailDto tender) {
         StringBuilder message = new StringBuilder();
@@ -31,7 +31,18 @@ public class TenderMessageBuilderService {
                 message.append(buildLotMessage(lot));
             }
         }
-
+        if (tender.getPeriod().getEnquiries() != null && !tender.getPeriod().getEnquiries().isEmpty()){
+            message.append("<b>Разъяснения:</b>\n");
+            for (Enquiry enquiry: tender.getPeriod().getEnquiries()){
+                message.append(buildEnqMessage(enquiry));
+            }
+        }
+        if (tender.getDocuments() != null && !tender.getDocuments().isEmpty()) {
+            message.append("<b>\uD83D\uDCC4 Документы:</b>\n");
+            for (Document document : tender.getDocuments()){
+                message.append(buildDocMessage(document));
+            }
+        }
         return message.toString();
     }
 
@@ -117,5 +128,56 @@ public class TenderMessageBuilderService {
             sb.append("Аукцион: ").append(DateUtil.dateTimeToStr(auction)).append("\n");
         }
         return sb.toString();
+    }
+
+    private String buildDocMessage(Document document){
+        return "\n<b>🔹 " + escape(document.getTitle()) + "</b> " +
+                escape(document.getDescription());
+    }
+
+    private String buildEnqMessage(Enquiry enquiry){
+        return "\n<b>🔹 Название вопроса: " + escape(enquiry.getTitle()) + "</b> " +
+                escape(enquiry.getDescription()) + "\n " +
+                escape(enquiry.getAnswer());
+    }
+
+    /**
+     * Делит текст по строкам, обеспечивая, чтобы первая часть шла в caption (1024 символа),
+     * а оставшиеся — в SendMessage (4096 символов). Разделение по \n.
+     *
+     * @param text исходный текст
+     * @return список частей сообщения
+     */
+    public static List<String> splitMessageByLines(String text) {
+        List<String> result = new ArrayList<>();
+
+        if (text == null || text.isEmpty()) {
+            return result;
+        }
+
+        String[] lines = text.split("\n");
+        StringBuilder current = new StringBuilder();
+        int currentLimit = PHOTO_CAPTION_LIMIT;
+
+        for (String line : lines) {
+            // +1 потому что строка будет добавляться с символом новой строки
+            int projectedLength = current.length() + line.length() + 1;
+
+            if (projectedLength > currentLimit) {
+                // Сохраняем накопленное
+                result.add(current.toString().trim());
+                current = new StringBuilder();
+                currentLimit = TELEGRAM_LIMIT; // После caption идут большие блоки
+            }
+
+            current.append(line).append("\n");
+        }
+
+        // Добавим то, что осталось
+        if (current.length() > 0) {
+            result.add(current.toString().trim());
+        }
+
+        return result;
     }
 }

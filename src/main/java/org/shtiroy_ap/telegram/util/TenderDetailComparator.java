@@ -31,22 +31,22 @@ public class TenderDetailComparator {
         }
 
         // Compare basic fields
-        compareField(changes, "<b>Наименование</b>", oldDetail.getName(), newDetail.getName());
-        compareField(changes, "<b>Категория</b>", oldDetail.getCategory(), newDetail.getCategory());
-        compareField(changes, "<b>Наименование категории</b>", oldDetail.getCategoryName(), newDetail.getCategoryName());
-        compareField(changes, "<b>Дата</b>", oldDetail.getDate(), newDetail.getDate());
-        compareField(changes, "<b>Статус</b>", oldDetail.getStatus(), newDetail.getStatus());
-        compareField(changes, "<b>Детали статуса</b>", oldDetail.getStatusDetails(), newDetail.getStatusDetails());
+        compareField(changes, "\uD83C\uDFF7 <b>Наименование</b>", oldDetail.getName(), newDetail.getName());
+        compareField(changes, "\uD83E\uDDE9 <b>Категория</b>", oldDetail.getCategory(), newDetail.getCategory());
+        compareField(changes, "\uD83D\uDCB5 <b>Наименование категории</b>", oldDetail.getCategoryName(), newDetail.getCategoryName());
+        compareField(changes, "\uD83D\uDDD3 <b>Дата</b>", oldDetail.getDate(), newDetail.getDate());
+        compareField(changes, "\uD83D\uDD50 <b>Статус</b>", oldDetail.getStatus(), newDetail.getStatus());
+        compareField(changes, "\uD83D\uDD50 <b>Детали статуса</b>", oldDetail.getStatusDetails(), newDetail.getStatusDetails());
 
         // Compare amount with precision
         if (oldDetail.getAmount() != null && newDetail.getAmount() != null) {
             if (oldDetail.getAmount().compareTo(newDetail.getAmount()) != 0) {
-                changes.add(String.format("Сумма изменилась с <i>%s %s</i> на <i>%s %s</i>",
+                changes.add(String.format("\uD83D\uDCB0 <b>Сумма</b> изменилась с <i>%s %s</i> на <i>%s %s</i>",
                         oldDetail.getAmount(), oldDetail.getCurrency(),
                         newDetail.getAmount(), newDetail.getCurrency()));
             }
         } else if (oldDetail.getAmount() != newDetail.getAmount()) {
-            compareField(changes, "Сумма",
+            compareField(changes, "\uD83D\uDCB0 <b>Сумма</b>",
                     oldDetail.getAmount() != null ? oldDetail.getAmount().toString() : null,
                     newDetail.getAmount() != null ? newDetail.getAmount().toString() : null);
         }
@@ -74,7 +74,7 @@ public class TenderDetailComparator {
 
     private static void compareField(List<String> changes, String fieldName, String oldValue, String newValue) {
         if (!Objects.equals(oldValue, newValue)) {
-            changes.add(String.format("%s изменился с <i>'%s'</i> на <i>'%s'</i>", fieldName,
+            changes.add(String.format("%s изменился с <i>'%s'</i> <b>на</b> <i>'%s'</i>", fieldName,
                     oldValue != null ? oldValue : "null",
                     newValue != null ? newValue : "null"));
         }
@@ -84,8 +84,8 @@ public class TenderDetailComparator {
                                              LocalDateTime oldValue, LocalDateTime newValue) {
         if (!Objects.equals(oldValue, newValue)) {
             changes.add(String.format("%s изменился с <i>'%s'</i> на <i>'%s'</i>", fieldName,
-                    oldValue != null ? oldValue.toString() : "null",
-                    newValue != null ? newValue.toString() : "null"));
+                    oldValue != null ? DateUtil.dateTimeToStr(oldValue) : "-",
+                    newValue != null ? DateUtil.dateTimeToStr(newValue) : "-"));
         }
     }
 
@@ -124,7 +124,7 @@ public class TenderDetailComparator {
                 }
             }
             if (!found) {
-                changes.add(String.format("Добавлен новый документ: %s (%s)", newDoc.getTitle(), newDoc.getUrl()));
+                changes.add(String.format("\uD83D\uDCC4 Добавлен новый документ: %s (%s)", newDoc.getTitle(), "<a href=\""+newDoc.getUrl()+"\">скачать</a>"));
             }
         }
 
@@ -138,7 +138,7 @@ public class TenderDetailComparator {
                 }
             }
             if (!found) {
-                changes.add(String.format("Документ удален: %s (%s)", oldDoc.getTitle(), oldDoc.getUrl()));
+                changes.add(String.format("\uD83D\uDCC4 Документ удален: %s", oldDoc.getTitle()));
             }
         }
     }
@@ -213,8 +213,8 @@ public class TenderDetailComparator {
                 }
             }
             if (!found) {
-                changes.add(String.format("Новый запрос добавлен: %s (дата: %s)",
-                        newEnq.getTitle(), newEnq.getDate()));
+                changes.add(String.format("<b>Новый запрос добавлен</b>: %s",
+                        newEnq.toString()));
             }
         }
 
@@ -230,7 +230,7 @@ public class TenderDetailComparator {
             }
             if (!found) {
                 changes.add(String.format("Запрос удален: %s (дата: %s)",
-                        oldEnq.getTitle(), oldEnq.getDate()));
+                        oldEnq.getTitle(), DateUtil.dateTimeToStr(oldEnq.getDate())));
             }
         }
     }
