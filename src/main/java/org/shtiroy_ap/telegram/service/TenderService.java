@@ -3,6 +3,7 @@ package org.shtiroy_ap.telegram.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.shtiroy_ap.telegram.entity.Config;
+import org.shtiroy_ap.telegram.model.Document;
 import org.shtiroy_ap.telegram.model.TenderDetailDto;
 import org.shtiroy_ap.telegram.model.TenderDto;
 import org.shtiroy_ap.telegram.util.DateUtil;
@@ -26,6 +27,8 @@ public class TenderService {
     private String apiUrlDetail;
     @Value("${service.getUpdate}")
     private String apiUrlUpdate;
+    @Value("${service.getDocs}")
+    private String apiUrlDocs;
 
     public TenderService(WebClient webClient, ConfigService configService){
         this.webClient = webClient;
@@ -80,6 +83,21 @@ public class TenderService {
             return detailDto;
         } catch (Exception e){
             log.info("Ошибка скачивания тендера {}", tenderId);
+            return null;
+        }
+    }
+
+    public List<Document> fetchDocumentList(String tenderId){
+        log.info("Список документов по тендеру {}", tenderId);
+        try{
+            return webClient.post()
+                    .uri(apiUrlDocs)
+                    .bodyValue(tenderId)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Document>>() {})
+                    .block();
+        } catch (Exception ex){
+            log.info("Ошибка скачивания списка документов {}", tenderId);
             return null;
         }
     }

@@ -19,6 +19,7 @@ service:
   getNew: ${BASE_URL}/tender/get/new
   getDetail: ${BASE_URL}/tender/info
   getUpdate: ${BASE_URL}/tender/verify
+  getDocs: ${BASE_URL}/tender/docs
 #
 app:
   crone:
