@@ -280,7 +280,9 @@ public class TenderDetailComparator {
             compareLotItems(changes, oldLot.getLotItems(), newLot.getLotItems(), newLot.getTitle());
 
             // Compare suppliers
-            compareLotSuppliers(changes, oldLot.getLotSuppliers(), newLot.getLotSuppliers(), newLot.getTitle());
+            if (!newLot.getStatus().equals("cancelled")) {
+                compareLotSuppliers(changes, oldLot.getLotSuppliers(), newLot.getLotSuppliers(), newLot.getTitle());
+            }
         }
 
         // Check for removed lots

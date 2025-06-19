@@ -55,61 +55,62 @@ public class FavoriteTenderService {
         List<UserFavorite> favorites = favoriteRepository.findAll();
 
         for (UserFavorite fav : favorites){
-            TenderDetailDto current = tenderService.verifyTenderDetail(fav.getTenderId());
             TenderDetailDto previous;
-
             try {
                 previous = objectMapper.readValue(fav.getLastSnapshot(), TenderDetailDto.class);
             } catch (JsonProcessingException exception){
                 continue; // неможем распарсить json
             }
-            if (current != null){
-                //Есть изменения
-                try{
-                    String currentJson = objectMapper.writeValueAsString(current);
-                    fav.setLastSnapshot(currentJson);
-                } catch (JsonProcessingException exception){
-                    exception.getMessage();
-                }
-                favoriteRepository.save(fav);
-                List<String> diff = TenderDetailComparator.compareTenderDetails(previous, current);
-                if (!diff.isEmpty()) {
-                    String diffSummary = String.join("\n", diff);
-                    ClassPathResource imgResource = new ClassPathResource("images/tender_alert.png");
-                    if (diffSummary.length() < 1024) {
-                        SendPhoto message = new SendPhoto();
-                        message.setChatId(fav.getChatId());
-                        message.setCaption("<b>📢 Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
-                        message.setParseMode("HTML");
-                        try {
-                            message.setPhoto(new InputFile(imgResource.getInputStream(), "tender_alert.png"));
-                            absSender.execute(message);
-                        } catch (TelegramApiException | IOException exception) {
-                            exception.printStackTrace();
-                        }
-                    } else {
-
-                        try {
-                            List<String> parts = TenderMessageBuilderService.splitMessageByLines("<b>📢 Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
-
-                            // Отправка первой части с картинкой
-                            SendPhoto photo = new SendPhoto();
-                            photo.setChatId(fav.getChatId());
-                            photo.setPhoto(new InputFile(imgResource.getInputStream(), "tender_alert.png"));
-                            photo.setCaption(parts.get(0)); // caption до 1024 символов
-                            photo.setParseMode("HTML");
-                            absSender.execute(photo);
-
-                            // Остальные части — SendMessage
-                            for (int i = 1; i < parts.size(); i++) {
-                                SendMessage msg = new SendMessage();
-                                msg.setChatId(fav.getChatId());
-                                msg.setText(parts.get(i));
-                                msg.setParseMode("HTML");
-                                absSender.execute(msg);
+            if (!previous.getStatus().equals("cancelled")) {
+                TenderDetailDto current = tenderService.verifyTenderDetail(fav.getTenderId());
+                if (current != null) {
+                    //Есть изменения
+                    try {
+                        String currentJson = objectMapper.writeValueAsString(current);
+                        fav.setLastSnapshot(currentJson);
+                    } catch (JsonProcessingException exception) {
+                        exception.getMessage();
+                    }
+                    favoriteRepository.save(fav);
+                    List<String> diff = TenderDetailComparator.compareTenderDetails(previous, current);
+                    if (!diff.isEmpty()) {
+                        String diffSummary = String.join("\n", diff);
+                        ClassPathResource imgResource = new ClassPathResource("images/tender_alert.png");
+                        if (diffSummary.length() < 1024) {
+                            SendPhoto message = new SendPhoto();
+                            message.setChatId(fav.getChatId());
+                            message.setCaption("<b>📢 Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
+                            message.setParseMode("HTML");
+                            try {
+                                message.setPhoto(new InputFile(imgResource.getInputStream(), "tender_alert.png"));
+                                absSender.execute(message);
+                            } catch (TelegramApiException | IOException exception) {
+                                exception.printStackTrace();
                             }
-                        } catch (TelegramApiException | IOException e) {
-                            e.printStackTrace();
+                        } else {
+
+                            try {
+                                List<String> parts = TenderMessageBuilderService.splitMessageByLines("<b>📢 Обновление в тендере:</b> <i>" + current.getName() + ":</i>\n\n" + diffSummary);
+
+                                // Отправка первой части с картинкой
+                                SendPhoto photo = new SendPhoto();
+                                photo.setChatId(fav.getChatId());
+                                photo.setPhoto(new InputFile(imgResource.getInputStream(), "tender_alert.png"));
+                                photo.setCaption(parts.get(0)); // caption до 1024 символов
+                                photo.setParseMode("HTML");
+                                absSender.execute(photo);
+
+                                // Остальные части — SendMessage
+                                for (int i = 1; i < parts.size(); i++) {
+                                    SendMessage msg = new SendMessage();
+                                    msg.setChatId(fav.getChatId());
+                                    msg.setText(parts.get(i));
+                                    msg.setParseMode("HTML");
+                                    absSender.execute(msg);
+                                }
+                            } catch (TelegramApiException | IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
