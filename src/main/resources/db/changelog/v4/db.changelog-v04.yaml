@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: v4.0__create_table_t_company
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v4/v4.0__create_table_t_company.sql
+  - changeSet:
+      id: v4.0__create_table_pin_code
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v4/v4.0__create_table_pin_code.sql
+  - changeSet:
+      id: v4.0__alter_table_add_column_user
+      author: Shtiroy Aleksandr
+      changes:
+        sqlFile:
+          path: db/changelog/v4/v4.0__alter_table_add_column_user.sql
