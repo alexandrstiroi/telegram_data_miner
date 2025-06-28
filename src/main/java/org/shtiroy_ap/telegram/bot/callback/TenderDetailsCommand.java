@@ -57,10 +57,14 @@ public class TenderDetailsCommand implements CallbackCommand {
         downloadButton.setText("\uD83D\uDCCE Скачать документы");
         downloadButton.setCallbackData("downloadDocs_" + data);
 
+        InlineKeyboardButton downloadZip = new InlineKeyboardButton();
+        downloadZip.setText("\uD83D\uDCE6 Скачать документы в архиве");
+        downloadZip.setCallbackData("downloadZip_" + data);
         // Добавляем кнопки в разметку
         List<InlineKeyboardButton> keyboardRow = List.of(detailsButton);
         List<InlineKeyboardButton> keyboardRow2 = List.of(downloadButton);
-        List<List<InlineKeyboardButton>> keyboard = List.of(keyboardRow,keyboardRow2);
+        List<InlineKeyboardButton> keyboardRow3= List.of(downloadZip);
+        List<List<InlineKeyboardButton>> keyboard = List.of(keyboardRow,keyboardRow2, keyboardRow3);
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);

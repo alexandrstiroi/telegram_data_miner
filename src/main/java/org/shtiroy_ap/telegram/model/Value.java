@@ -38,4 +38,9 @@ public class Value {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    @Override
+    public String toString() {
+        return amount != null ? amount.toString() : " ";
+    }
 }

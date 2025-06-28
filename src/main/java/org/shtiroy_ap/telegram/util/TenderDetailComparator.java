@@ -280,7 +280,7 @@ public class TenderDetailComparator {
             compareLotItems(changes, oldLot.getLotItems(), newLot.getLotItems(), newLot.getTitle());
 
             // Compare suppliers
-            if (!newLot.getStatus().equals("cancelled")) {
+            if (!newLot.getStatus().equals("cancelled") || !newLot.getStatus().equals("unsuccessful")) {
                 compareLotSuppliers(changes, oldLot.getLotSuppliers(), newLot.getLotSuppliers(), newLot.getTitle());
             }
         }
@@ -355,7 +355,8 @@ public class TenderDetailComparator {
                                             List<LotSupplier> newSuppliers, String lotTitle) {
         if (oldSuppliers == null && newSuppliers == null) return;
         if (oldSuppliers == null || newSuppliers == null) {
-            changes.add("Поставщики для '" + lotTitle + "' " + (oldSuppliers == null ? "добавлены" : "удалены"));
+            changes.add("Поставщики для '" + lotTitle + "' " + (oldSuppliers == null ? "добавлены:\n" +
+                    newSuppliers.stream().map(LotSupplier::toString).collect(Collectors.joining("\n")) : "удалены"));
             return;
         }
 
@@ -367,7 +368,7 @@ public class TenderDetailComparator {
         // Compare suppliers by ID (assuming it's unique)
         for (LotSupplier newSupplier : newSuppliers) {
             LotSupplier oldSupplier = findLotSupplierById(oldSuppliers, newSupplier.getId());
-            if (oldSupplier == null) {
+            if (oldSupplier == null && newSupplier.getName()!=null) {
                 changes.add(String.format("Новый поставщик добавлен в лот '%s': %s", lotTitle, newSupplier.getName()));
                 continue;
             }

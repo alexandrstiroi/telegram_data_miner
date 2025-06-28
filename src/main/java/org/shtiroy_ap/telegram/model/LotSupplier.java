@@ -78,12 +78,9 @@ public class LotSupplier {
 
     @Override
     public String toString() {
-        return "LotSupplier{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", status='" + status + '\'' +
-                ", description='" + description + '\'' +
-                ", value=" + value +
-                '}';
+        return  (name != null ? name + ", " : " ")  +
+                (description != null ? description : " ") +
+                (value != null ? "сумма - " + value + ", " : " ") +
+                (status != null ? "статус - " + status: " ");
     }
 }
