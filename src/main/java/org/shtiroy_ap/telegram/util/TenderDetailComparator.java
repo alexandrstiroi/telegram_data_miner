@@ -374,11 +374,11 @@ public class TenderDetailComparator {
             }
 
             compareField(changes, "наименование поставщика для лота '" + lotTitle + "'",
-                    oldSupplier.getName() != null ? oldSupplier.getName() : "-" , newSupplier.getName());
+                    (oldSupplier != null && oldSupplier.getName() != null) ? oldSupplier.getName() : "-" , newSupplier.getName());
             compareField(changes, "статус поставщика для лота '" + lotTitle + "'",
-                    oldSupplier.getStatus() != null ? oldSupplier.getStatus() : "-", newSupplier.getStatus());
+                    (oldSupplier != null && oldSupplier.getStatus() != null) ? oldSupplier.getStatus() : "-", newSupplier.getStatus());
             compareField(changes, "описания поставщика для лота '" + lotTitle + "'",
-                    oldSupplier.getDescription() != null ? oldSupplier.getDescription() : "-", newSupplier.getDescription());
+                    (oldSupplier != null && oldSupplier.getDescription() != null) ? oldSupplier.getDescription() : "-", newSupplier.getDescription());
 
             // Compare supplier value
             if (oldSupplier.getValue() != null && newSupplier.getValue() != null) {
